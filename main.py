@@ -1,14 +1,23 @@
 #python____librerias______
 #
-from typing import Optional
+from enum import Enum#
+from typing import Optional#
 #_pydantic________________
-from pydantic import BaseModel
+from pydantic import BaseModel#
+from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
-from fastapi import FastAPI, Query 
+from fastapi import FastAPI #
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
 app = FastAPI()
+class haircolor(Enum):
+    white = "white"
+    brown = "brown"
+    black = "black"
+    blonde = "blonde"
+    red = "red"
+
 
 #modelos (location)
 class location(BaseModel):
@@ -20,11 +29,24 @@ class location(BaseModel):
 
 #models _ modelos (person)
 class person(BaseModel):
-    first_name: str
-    last_name:str
-    age: int
-    hair_color:Optional[str]= None
-    is_married:Optional[bool]= None
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=100
+        
+    )
+    last_name:str= Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )    
+    age: int = Field(
+        ...,
+        gt=0,
+        le=100
+    )    
+    hair_color:Optional[haircolor]= Field(default=None)
+    is_married:Optional[bool]= Field(default=None)
 
 
 @app.get("/")
