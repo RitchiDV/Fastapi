@@ -1,4 +1,5 @@
 #python____librerias______
+#
 from typing import Optional
 #_pydantic________________
 from pydantic import BaseModel
@@ -9,7 +10,15 @@ from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
 app = FastAPI()
 
-#models _ modelos
+#modelos (location)
+class location(BaseModel):
+    city:str
+    state:str
+    country:str
+
+
+
+#models _ modelos (person)
 class person(BaseModel):
     first_name: str
     last_name:str
@@ -60,8 +69,20 @@ def show_person(
     return{person_id: "it exists!!"}
 
 
-# validaciones : request body
+# validaciones : request Body
 
-# @app.put("/person/{person_id}")
-# def pass ():
-#     pass
+@app.put("/person/{person_id}")
+def update_person(
+    person_id: int = Path(
+        ...,# los 3 puntos es que el parametro  patch es obligatorio
+        title="person ID",
+        description ="this is the person ID",
+        gt=0# < gt = mayor que 0
+    ),
+    person:person = Body(...),
+    location:location = Body(...) # se creo una clase para location y su libreria Basemodel
+):
+#creando dos request body 
+    results = person.dict()#comvertimos el request en dictcionario
+    results.update(location.dict())#combinamos person con location con .update
+    return results#result se le asigna el valor y se retorna 
