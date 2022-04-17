@@ -58,3 +58,10 @@ def show_person(
          gt=0)
 ):
     return{person_id: "it exists!!"}
+
+
+# validaciones : request body
+
+# @app.put("/person/{person_id}")
+# def pass ():
+#     pass
