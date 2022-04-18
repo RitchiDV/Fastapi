@@ -36,17 +36,20 @@ class location(BaseModel):
     city:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "manzanillo"
     )
     state:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "colima"
     )
     country:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "las torres"
     )
 
 
@@ -56,13 +59,15 @@ class person(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
-        max_length=100
+        max_length=100,
+        example= "Ricardo"
         
     )
     last_name:str= Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example = "diaz"
     )    
     age: int = Field(
         ...,
