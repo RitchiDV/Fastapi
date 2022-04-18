@@ -1,6 +1,8 @@
 #python____librerias______
 #
-from enum import Enum#
+from dataclasses import field
+from enum import Enum
+from importlib.resources import path#
 from typing import Optional#
 #_pydantic________________
 from pydantic import PaymentCardNumber#es para crear un icomers pide el numero de la targeta de credito
@@ -85,10 +87,51 @@ class person(BaseModel):
         gt=0,
         lt=18
     )
+    password: str = Field(
+        ...,
+        min_length=8
+
+    )
     # card = Card(
     # card_numbers="4000000000000002")
+
+
+class personOut(BaseModel):
+    first_name: str = Field(
+        ...,
+        min_length=1,
+        max_length=100,
+        example= "Ricardo"
+        
+    )
+    last_name:str= Field(
+        ...,
+        min_length=1,
+        max_length=50,
+        example = "diaz"
+    )    
+    age: int = Field(
+        ...,
+        gt=0,
+        le=100
+    )    
+    hair_color:Optional[haircolor]= Field(default=None)
+
+    is_married:Optional[bool]= Field(default=None)
+
+    email:Optional[emaill]= Field(default=None) # validacion de email
+
+    card_numbers: int = Field(
+        ...,
+        gt=0,
+        lt=18
+    )
     
+
     
+    # card = Card(
+    # card_numbers="4000000000000002")
+      
 
 
 @app.get("/")
@@ -97,26 +140,26 @@ def home():
 
 
 #_________request and response  body_______________________________________
-@app.post("/person/new")
+@app.post("/person/new",response_model=personOut)#entra por person y al mandar la respuesta al cliente se manda personOut como respuesta.
 def create_person(person: person = Body(...)):# se creea un modelo de la class person y se representa en (def con person )
     return person
 
 #_____Validaciones: Query Parameters_______________________________________
 @app.get("/person/detail")
 def show_person(
-    name:Optional[str] =Query (
-        None,
+    name:Optional[str] =Query(
+        None    ,
         min_length=1,
         max_length=50,
         title = "person name",
         description = "this is the person . it's between 1 and 50  characters",
-        examples ="ricardo"
+        example ="ricardo"
     ),
-    age : str= Query(
+    age:str= Query(
         ...,
         title="person age",
         description="this is the person age. is's required",
-        examples ="23"
+        example = 23
         )
 ):
     return{name:age}
@@ -130,9 +173,10 @@ def show_person(
         ...,
         title="person id",
         description="this is the person id . it's  required",
-         gt=0,
-         examples=123 )
+        gt=0,
+        example=123 )
 ):
+
     return{person_id: "it exists!!"}
 
 
@@ -145,12 +189,12 @@ def update_person(
         title="person ID",
         description ="this is the person ID",
         gt=0,
-        examples=123# < gt = mayor que 0
+        example=123# < gt = mayor que 0
     ),
     person:person = Body(...),
     location:location = Body(...) # se creo una clase para location y su libreria Basemodel
 ):
-#creando dos request body 
+    #creando dos request body 
     results = person.dict()#comvertimos el request en dictcionario
     results.update(location.dict())#combinamos person con location con .update
     return results#result se le asigna el valor y se retorna 
