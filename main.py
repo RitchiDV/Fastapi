@@ -19,7 +19,7 @@ app = FastAPI()
 class Card(PaymentCardNumber):
     card_numbers = PaymentCardNumber
 
-class email(EmailStr):#validacion de email
+class emaill(EmailStr):#validacion de email
     example = "@gmail.com"
 
 
@@ -36,17 +36,20 @@ class location(BaseModel):
     city:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "manzanillo"
     )
     state:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "colima"
     )
     country:str = Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example= "las torres"
     )
 
 
@@ -56,13 +59,15 @@ class person(BaseModel):
     first_name: str = Field(
         ...,
         min_length=1,
-        max_length=100
+        max_length=100,
+        example= "Ricardo"
         
     )
     last_name:str= Field(
         ...,
         min_length=1,
-        max_length=50
+        max_length=50,
+        example = "diaz"
     )    
     age: int = Field(
         ...,
@@ -73,7 +78,7 @@ class person(BaseModel):
 
     is_married:Optional[bool]= Field(default=None)
 
-    emaill:Optional[email]= Field(default=None) # validacion de email
+    email:Optional[emaill]= Field(default=None) # validacion de email
 
     card_numbers: int = Field(
         ...,
