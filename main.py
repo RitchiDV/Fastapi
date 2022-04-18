@@ -19,7 +19,7 @@ app = FastAPI()
 class Card(PaymentCardNumber):
     card_numbers = PaymentCardNumber
 
-class email(EmailStr):#validacion de email
+class emaill(EmailStr):#validacion de email
     example = "@gmail.com"
 
 
@@ -73,7 +73,7 @@ class person(BaseModel):
 
     is_married:Optional[bool]= Field(default=None)
 
-    emaill:Optional[email]= Field(default=None) # validacion de email
+    email:Optional[emaill]= Field(default=None) # validacion de email
 
     card_numbers: int = Field(
         ...,
