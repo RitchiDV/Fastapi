@@ -109,12 +109,14 @@ def show_person(
         min_length=1,
         max_length=50,
         title = "person name",
-        description = "this is the person . it's between 1 and 50  characters"
+        description = "this is the person . it's between 1 and 50  characters",
+        examples ="ricardo"
     ),
     age : str= Query(
         ...,
         title="person age",
-        description="this is the person age. is's required"
+        description="this is the person age. is's required",
+        examples ="23"
         )
 ):
     return{name:age}
@@ -128,7 +130,8 @@ def show_person(
         ...,
         title="person id",
         description="this is the person id . it's  required",
-         gt=0)
+         gt=0,
+         examples=123 )
 ):
     return{person_id: "it exists!!"}
 
@@ -141,7 +144,8 @@ def update_person(
         ...,# los 3 puntos es que el parametro  patch es obligatorio
         title="person ID",
         description ="this is the person ID",
-        gt=0# < gt = mayor que 0
+        gt=0,
+        examples=123# < gt = mayor que 0
     ),
     person:person = Body(...),
     location:location = Body(...) # se creo una clase para location y su libreria Basemodel
