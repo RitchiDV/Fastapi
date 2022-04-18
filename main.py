@@ -3,7 +3,9 @@
 from enum import Enum#
 from typing import Optional#
 #_pydantic________________
-from pydantic import BaseModel#
+from pydantic import PaymentCardNumber#es para crear un icomers pide el numero de la targeta de credito
+from pydantic import EmailStr#validacion de email
+from pydantic import BaseModel#libreria para modelos u objetos 
 from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
 from fastapi import FastAPI #
@@ -11,6 +13,16 @@ from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
 app = FastAPI()
+
+
+
+class Card(PaymentCardNumber):
+    card_numbers = PaymentCardNumber
+
+class email(EmailStr):#validacion de email
+    example = "@gmail.com"
+
+
 class haircolor(Enum):
     white = "white"
     brown = "brown"
@@ -21,9 +33,21 @@ class haircolor(Enum):
 
 #modelos (location)
 class location(BaseModel):
-    city:str
-    state:str
-    country:str
+    city:str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    state:str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
+    country:str = Field(
+        ...,
+        min_length=1,
+        max_length=50
+    )
 
 
 
@@ -46,7 +70,20 @@ class person(BaseModel):
         le=100
     )    
     hair_color:Optional[haircolor]= Field(default=None)
+
     is_married:Optional[bool]= Field(default=None)
+
+    emaill:Optional[email]= Field(default=None) # validacion de email
+
+    card_numbers: int = Field(
+        ...,
+        gt=0,
+        lt=18
+    )
+    # card = Card(
+    # card_numbers="4000000000000002")
+    
+    
 
 
 @app.get("/")
