@@ -1,8 +1,6 @@
 #python____librerias______
 #
-from dataclasses import field
-from enum import Enum
-from importlib.resources import path#
+from enum import Enum#
 from typing import Optional#
 #_pydantic________________
 from pydantic import PaymentCardNumber#es para crear un icomers pide el numero de la targeta de credito
@@ -35,6 +33,10 @@ class haircolor(Enum):
 
 #modelos (location)
 class location(BaseModel):
+
+
+
+
     city:str = Field(
         ...,
         min_length=1,
@@ -56,8 +58,7 @@ class location(BaseModel):
 
 
 
-#models _ modelos (person)
-class person(BaseModel):
+class personbase(BaseModel):#erencia  de person base para no repetir lineas
     first_name: str = Field(
         ...,
         min_length=1,
@@ -82,56 +83,22 @@ class person(BaseModel):
 
     email:Optional[emaill]= Field(default=None) # validacion de email
 
-    card_numbers: int = Field(
-        ...,
-        gt=0,
-        lt=18
-    )
+
+
+
+#models _ modelos (person)
+class person(personbase):
     password: str = Field(
         ...,
-        min_length=8
-
+        min_length=8,
+        max_length=20
     )
     # card = Card(
     # card_numbers="4000000000000002")
 
 
-class personOut(BaseModel):
-    first_name: str = Field(
-        ...,
-        min_length=1,
-        max_length=100,
-        example= "Ricardo"
-        
-    )
-    last_name:str= Field(
-        ...,
-        min_length=1,
-        max_length=50,
-        example = "diaz"
-    )    
-    age: int = Field(
-        ...,
-        gt=0,
-        le=100
-    )    
-    hair_color:Optional[haircolor]= Field(default=None)
-
-    is_married:Optional[bool]= Field(default=None)
-
-    email:Optional[emaill]= Field(default=None) # validacion de email
-
-    card_numbers: int = Field(
-        ...,
-        gt=0,
-        lt=18
-    )
-    
-
-    
-    # card = Card(
-    # card_numbers="4000000000000002")
-      
+class personOut(personbase):#personOut contiene lo de personbase 
+    pass
 
 
 @app.get("/")
@@ -148,7 +115,7 @@ def create_person(person: person = Body(...)):# se creea un modelo de la class p
 @app.get("/person/detail")
 def show_person(
     name:Optional[str] =Query(
-        None    ,
+        None,
         min_length=1,
         max_length=50,
         title = "person name",
@@ -159,8 +126,8 @@ def show_person(
         ...,
         title="person age",
         description="this is the person age. is's required",
-        example = 23
-        )
+        example = "23"
+    )
 ):
     return{name:age}
 
