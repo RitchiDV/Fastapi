@@ -1,5 +1,6 @@
 #python____librerias______
 #
+from email import message
 from enum import Enum#
 from typing import Optional#
 #_pydantic________________
@@ -8,8 +9,8 @@ from pydantic import EmailStr#validacion de email
 from pydantic import BaseModel#libreria para modelos u objetos 
 from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
-from fastapi import FastAPI #
-from fastapi import status
+from fastapi import FastAPI, Form #(form : indica que un paramtro dentro de una path= <- viene de un formulario )
+from fastapi import status#status code personalisados
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
@@ -101,6 +102,14 @@ class person(personbase):
 class personOut(personbase):#personOut contiene lo de personbase 
     pass
 
+class loginOut(BaseModel):
+    username:str = Field(
+        ...,
+        max_length=20,
+        example ="richard2021"
+        )
+    message: str = Field(default="login succesfully!")
+
 
 @app.get(
     path="/",
@@ -181,3 +190,12 @@ def update_person(
     results = person.dict()#comvertimos el request en dictcionario
     results.update(location.dict())#combinamos person con location con .update
     return results#result se le asigna el valor y se retorna 
+
+
+@app.post(
+    path="/login",
+    response_model=loginOut,
+    status_code=status.HTTP_200_OK
+)
+def login (username: str=Form(...), password: str = Form(...)):
+    return loginOut(username=username)
