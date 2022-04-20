@@ -9,6 +9,7 @@ from pydantic import BaseModel#libreria para modelos u objetos
 from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
 from fastapi import FastAPI #
+from fastapi import status
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
@@ -101,18 +102,27 @@ class personOut(personbase):#personOut contiene lo de personbase
     pass
 
 
-@app.get("/")
+@app.get(
+    path="/",
+    status_code=status.HTTP_200_OK)#status code personalisados
 def home():
     return{"hello":"world"}
 
 
 #_________request and response  body_______________________________________
-@app.post("/person/new",response_model=personOut)#entra por person y al mandar la respuesta al cliente se manda personOut como respuesta.
+@app.post(
+    path="/person/new",
+    response_model=personOut,#entra por person y al mandar la respuesta al cliente se manda personOut como respuesta.
+    status_code=status.HTTP_201_CREATED
+)
 def create_person(person: person = Body(...)):# se creea un modelo de la class person y se representa en (def con person )
     return person
 
 #_____Validaciones: Query Parameters_______________________________________
-@app.get("/person/detail")
+@app.get(
+    path="/person/detail",
+    status_code=status.HTTP_200_OK
+    )
 def show_person(
     name:Optional[str] =Query(
         None,
@@ -134,7 +144,10 @@ def show_person(
     
 #______validaciones path parameters___{person_id}______________________________________
 
-@app.get("/person/detail/{person_id}")
+@app.get(
+    path="/person/detail/{person_id}",
+    status_code=status.HTTP_200_OK
+    )
 def show_person(
     person_id: int = Path(
         ...,
@@ -149,7 +162,10 @@ def show_person(
 
 # validaciones : request Body
 
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_200_OK
+    )
 def update_person(
     person_id: int = Path(
         ...,# los 3 puntos es que el parametro  patch es obligatorio
