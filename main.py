@@ -1,20 +1,20 @@
 #python____librerias______
 #
-from email import message
-from enum import Enum#
+from enum import Enum
 from typing import Optional
-from unittest.util import _MAX_LENGTH#
 #_pydantic________________
 from pydantic import PaymentCardNumber#es para crear un icomers pide el numero de la targeta de credito
 from pydantic import EmailStr#validacion de email
 from pydantic import BaseModel#libreria para modelos u objetos 
 from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
-from fastapi import FastAPI, Form, Header, Cookie #(form : indica que un paramtro dentro de una path= <- viene de un formulario )
+from fastapi import FastAPI, File, Form, Header, Cookie, UploadFile #(form : indica que un paramtro dentro de una path= <- viene de un formulario )
 from fastapi import status#status code personalisados
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
+from fastapi import UploadFile
+
 app = FastAPI()
 
 
@@ -232,3 +232,34 @@ def contact (
 ):
     return user_agent
 
+#files
+@app.post(
+    path="/post-image",
+    status_code=status.HTTP_200_OK
+    )
+def post_image(
+    image: UploadFile = File(...)
+):
+    return {
+        "filename": image.filename,#optenemos el archivo que queremos subir a la plataforma
+        "format": image.content_type,#optenemos el formato del archivo png,jpg entre otros
+        "Size(kb)":round(len(image.file.read())/1024,ndigits=2)#round redonde numero  
+        #(len)
+        #read lee  la capacidad de la imagen 
+        #ndigits=agrega dos numeros con punto decimal 
+        #operacion:se lee el archivo cuenta los numeros de bytes y los redondea dividido entre 1024
+    }
+
+@app.post(
+    path="/post-mp4",
+    status_code=status.HTTP_200_OK
+)
+def post_mp4(
+    video: UploadFile = File(...)
+
+):
+    return {
+        "filename":video.filename,
+        "format":video.content_type,
+        "Size(kb)":round(len(video.file.read())/1024,ndigits=2)
+    }
