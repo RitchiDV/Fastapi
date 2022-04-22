@@ -14,9 +14,9 @@ from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
 from fastapi import UploadFile
+from fastapi import HTTPException
 
 app = FastAPI()
-
 
 
 class Card(PaymentCardNumber):
@@ -153,6 +153,7 @@ def show_person(
 
     
 #______validaciones path parameters___{person_id}______________________________________
+persons = [1,2,3,4,5,6,7,8]
 
 @app.get(
     path="/person/detail/{person_id}",
@@ -164,8 +165,14 @@ def show_person(
         title="person id",
         description="this is the person id . it's  required",
         gt=0,
-        example=123 )
+        example=123
+        )
 ):
+    if person_id not in persons:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="this person doesn't exists"
+        )
 
     return{person_id: "it exists!!"}
 
