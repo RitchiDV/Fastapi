@@ -2,14 +2,15 @@
 #
 from email import message
 from enum import Enum#
-from typing import Optional#
+from typing import Optional
+from unittest.util import _MAX_LENGTH#
 #_pydantic________________
 from pydantic import PaymentCardNumber#es para crear un icomers pide el numero de la targeta de credito
 from pydantic import EmailStr#validacion de email
 from pydantic import BaseModel#libreria para modelos u objetos 
 from pydantic import Field#validacion de los atributos en las clases
 #fastAPI___________________
-from fastapi import FastAPI, Form #(form : indica que un paramtro dentro de una path= <- viene de un formulario )
+from fastapi import FastAPI, Form, Header, Cookie #(form : indica que un paramtro dentro de una path= <- viene de un formulario )
 from fastapi import status#status code personalisados
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
@@ -199,3 +200,35 @@ def update_person(
 )
 def login (username: str=Form(...), password: str = Form(...)):
     return loginOut(username=username)
+
+#cookies and headers parameters
+@app.post(
+   path="/conntact",
+   status_code=status.HTTP_200_OK
+)
+def contact (
+    firts_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1
+     
+    ),
+    last_name: str = Form(
+        ...,
+        max_length=20,
+        min_length=1
+    
+    ),
+    email: EmailStr = Form(...),
+    messaje:str = Form(
+        ...,
+        min_length=20   
+    ),
+    user_agent: Optional[str]= Header(default=None),
+    ads: Optional[str]=Cookie(default=None)
+
+
+
+):
+    return user_agent
+
