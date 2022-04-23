@@ -13,8 +13,15 @@ from fastapi import status#status code personalisados
 from fastapi import Body#validacion obligatoria
 from fastapi import Query# validaciones Opcionales en parametros
 from fastapi import Path#con esto definimos las path parameter
-from fastapi import UploadFile
-from fastapi import HTTPException
+from fastapi import UploadFile#{ sintaxis
+        #"filename":video.filename,
+        #"format":video.content_type,
+        #"Size(kb)":round(len(video.file.read())/1024,ndigits=2)
+    #}
+
+
+from fastapi import HTTPException# status_code=status.HTTP_404_NOT_FOUND,
+                                 # detail="this person doesn't exists"
 
 app = FastAPI()
 
@@ -126,9 +133,22 @@ def home():
     path="/person/new",
     response_model=personOut,#entra por person y al mandar la respuesta al cliente se manda personOut como respuesta.
     status_code=status.HTTP_201_CREATED,
-    tags=["person"]
+    tags=["person"],
+    summary="create person in the app "
 )
 def create_person(person: person = Body(...)):# se creea un modelo de la class person y se representa en (def con person )
+    """
+    create person 
+
+    this path operation a create person in the app and  save the information in the data base
+
+    parameters:
+    - request body parameter:
+        - **person: person** -> A person model wit first bane, last name, age, hair color and marital status
+
+    Return  a person model with first name, last name , age , hair color and marital status
+   
+    """
     return person
 
 #_____Validaciones: Query Parameters_______________________________________
@@ -153,6 +173,15 @@ def show_person(
         example = "23"
     )
 ):
+    """
+    detalles de la persona
+    
+    este path te envia los detalles de la persona la cual estes buscando  en la base de datos
+
+   - **indaga a la persona**
+
+    """
+
     return{name:age}
 
     
@@ -173,12 +202,16 @@ def show_person(
         example=123
         )
 ):
+
+    """
+    **pass aqui introduce la documentacion (pendiente)**
+    """
     if person_id not in persons:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="this person doesn't exists"
         )
-
+   
     return{person_id: "it exists!!"}
 
 
@@ -200,9 +233,13 @@ def update_person(
     person:person = Body(...),
     location:location = Body(...) # se creo una clase para location y su libreria Basemodel
 ):
+    """
+    **pass aqui introduce la documentacion (pendiente)**
+    """
     #creando dos request body 
     results = person.dict()#comvertimos el request en dictcionario
     results.update(location.dict())#combinamos person con location con .update
+   
     return results#result se le asigna el valor y se retorna 
 
 
@@ -213,6 +250,9 @@ def update_person(
     tags=["inicio de secion"]
 )
 def login (username: str=Form(...), password: str = Form(...)):
+    """
+    ** - pass aqui introduce la documentacion (pendiente)**
+    """
     return loginOut(username=username)
 
 #cookies and headers parameters
@@ -245,6 +285,9 @@ def contact (
 
 
 ):
+    """
+    **pass aqui introduce la documentacion (pendiente)**
+    """
     return user_agent
 
 #files
@@ -257,6 +300,9 @@ def contact (
 def post_image(
     image: UploadFile = File(...)
 ):
+    """
+    **pass aqui introduce la documentacion (pendiente)**
+    """
     return {
         "filename": image.filename,#optenemos el archivo que queremos subir a la plataforma
         "format": image.content_type,#optenemos el formato del archivo png,jpg entre otros
@@ -276,6 +322,9 @@ def post_mp4(
     video: UploadFile = File(...)
 
 ):
+    """
+    **pass aqui introduce la documentacion (pendiente)**
+    """
     return {
         "filename":video.filename,
         "format":video.content_type,
