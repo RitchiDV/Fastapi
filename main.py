@@ -18,8 +18,6 @@ from fastapi import UploadFile#{ sintaxis
         #"format":video.content_type,
         #"Size(kb)":round(len(video.file.read())/1024,ndigits=2)
     #}
-
-
 from fastapi import HTTPException# status_code=status.HTTP_404_NOT_FOUND,
                                  # detail="this person doesn't exists"
 
