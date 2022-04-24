@@ -153,7 +153,9 @@ def create_person(person: person = Body(...)):# se creea un modelo de la class p
 @app.get(
     path="/person/detail",
     status_code=status.HTTP_200_OK,
-    tags=["person"]
+    tags=["person"],
+    deprecated=True#deprecated nos permite poner en stop la path operation
+    #no afecta en nada solo si es para mejorar la app
     )
 def show_person(
     name:Optional[str] =Query(
